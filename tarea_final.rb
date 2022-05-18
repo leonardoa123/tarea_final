@@ -26,7 +26,21 @@ def build_web_page(array)
     f.write("\t","</ul>","\n","</body>","\n","</html>")
 end
 
+def  photos_count(array)
+    array_fotos = []
+    grupo = []
+    array.each do |e|
+        array_fotos << e["camera"]["name"]
+    end
+    grupo = array_fotos.group_by{|x| x}
+    grupo.each do |k,v|
+        grupo[k] = v.count
+    end  
+    return grupo
+end
 
 fotos_nasa = request("https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?api_key=#{ARGV[0]}&sol=1000")
 
 build_web_page(fotos_nasa["photos"])
+
+print photos_count(fotos_nasa["photos"])
