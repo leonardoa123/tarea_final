@@ -3,8 +3,8 @@ require "net/http"
 require "json"
 
 
-def request()
-    url = URI('https://api.nasa.gov/planetary/apod?api_key=iNIr3BUgxaNB4qGmwhBhE83v43VuwSC3kYcyvpbR&count=20')
+def request(api_url)
+    url = URI(api_url)
     
     http = Net::HTTP.new(url.host, url.port)
    
@@ -21,12 +21,12 @@ def build_web_page(array)
     f.write("<html>","\n","<head>","\n","</head>","\n","<body>","\n","\t","<ul>","\n")
     array[0..5].each do |e|
         f = File.open("index.html", "a")
-        f.write("\t\t","<li>","<img src=\"#{e["url"]}\" alt=\"#{e["title"]}\">","</li>","\n")
+        f.write("\t\t","<li>","<img src=\"#{e["img_src"]}\" alt=\"#{e["id"]}\">","</li>","\n")
     end
     f.write("\t","</ul>","\n","</body>","\n","</html>")
 end
 
 
-fotos_nasa = request()
+fotos_nasa = request("https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?api_key=#{ARGV[0]}&sol=1000")
 
-build_web_page(fotos_nasa)
+build_web_page(fotos_nasa["photos"])
